@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <p class="error"> Invalid user info </p>
+    {% endif %} 
+
+<!-- partial:index.partial.html -->
+<p class="tip"></p>
+<div class="cont">
+  <div class="form sign-in">
+    <h2>Welcome back,</h2>
+
+    <form action="/useradmission/auth/" method="post">
+      <div class="add_your_styles">
+        {{ login_message }}
+      </div>
+
+      {% csrf_token %}
+
+    <label>
+      <span>Email</span>
+      <input type="email" name="uemail" required />
+    </label>
+    <label>
+      <span>Password</span>
+      <input type="password" name="upassword" required />
+    </label>
+    <p class="forgot-pass">Forgot password?</p>
+    <button type="submit" class="submit">Sign In</button>
+    </form>
+
+  <button type="button" class="fb-btn">Connect with <span>facebook</span></button>
+  </div>
+  <div class="sub-cont">
+    <div class="img">
+      <div class="img__text m--up">
+        <h2>New here?</h2>
+        <p>Sign up and discover great amount of new opportunities!</p>
+      </div>
+      <div class="img__text m--in">
+        <h2>One of us?</h2>
+        <p>If you already has an account, just sign in. We've missed you!</p>
+      </div>
+      <div class="img__btn">
+        <span class="m--up">Sign Up</span>
+        <span class="m--in">Sign In</span>
+      </div>
+    </div>
+
+    <form action="/useradmission/sign/" method="post">
+      {% csrf_token %}
+    <label>
+      <span>First Name</span>
+      <input type="text" name="fname" required />
+    </label>
+    <label>
+      <span>Last Name</span>
+      <input type="text" name="lname" required />
+    </label>
+    <label>
+      <span>Email</span>
+      <input type="email" name="uemail" required />
+    </label>
+    <label>
+      <span>Password</span>
+      <input type="password" name="pass1" required />
+    </label>
+
+    <button type="submit" class="submit">Sign Up</button>
+
+    </form>
+      <button type="button" class="fb-btn">Join with <span>facebook</span></button>
+    </div>
+  </div>
+</div>
+
+<a href="#" target="_blank" class="icon-link">
+  <img src="http://icons.iconarchive.com/icons/uiconstock/socialmedia/256/Dribbble-icon.png">
+</a>
+<a href="#" target="_blank" class="icon-link icon-link--twitter">
+  <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/twitter-128.png">
+</a>
+
+  
+{% endblock %}
+
+
+   

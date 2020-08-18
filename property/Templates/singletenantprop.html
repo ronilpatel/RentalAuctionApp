@@ -1,0 +1,307 @@
+{% extends 'basetenant.html' %}
+{% load static %}
+
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- 
+
+    space to print the error message : if person as a tenant try to apply for his own property
+
+-->
+<style>
+    .form-rounded {
+        border-radius: 1rem;
+    }
+</style>
+
+<body class="blur">
+    <div style="background-color: white;">
+            <section class="ftco-section ftco-property-details">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <div class="property-details">
+                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                            <div class="text text-center">
+                                                    <span class="subheading"></span>
+                                                    <h2><strong>{{ pd.propname }}</strong></h2>
+                                            </div>
+            <!--------------------------------------------------------------- Worksection : Property images display ---------------------------------------------->
+                                        <div class="carousel-inner" role="listbox">
+                                            {% for i in imageobjs %}
+                                                {% if forloop.first %}
+                                                    <div class="carousel-item active">
+                                                        <img class="d-block w-100" height="600px" src="{{ MEDIA_URL }}/{{i.proimage}}" alt="No Image Available">
+                                                    </div>
+                                                {% else %}
+                                                    <div class="carousel-item">
+                                                        <img class="d-block w-100" height="600px" src="{{ MEDIA_URL }}/{{i.proimage}}" alt="No Image Available">
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+            <!---------------------------------------------------------------------------------------------------------------------------------------------------->
+                                        
+            <!--------------------------------------------------------------- Worksection : Images Navigation Buttons----- --------------------------------------->
+                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                            data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                            data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+            <!---------------------------------------------------------------------------------------------------------------------------------------------------->
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 pills">
+                                <div class="bd-example bd-example-tabs">
+                                    <div class="d-flex justify-content-center">
+                                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="pills-description-tab" data-toggle="pill"
+                                                    href="#pills-description" role="tab" aria-controls="pills-description"
+                                                    aria-expanded="true">Features</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill"
+                                                    href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer"
+                                                    aria-expanded="true">Description</a>
+                                            </li>
+                                         
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-amenities-tab" data-toggle="pill"
+                                                    href="#pills-amenities" role="tab" aria-controls="pills-amenities"
+                                                    aria-expanded="true">Amenities</a>
+                                            </li>
+            
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-rooms-tab" data-toggle="pill" href="#pills-rooms"
+                                                    role="tab" aria-controls="pills-rooms" aria-expanded="true">Rooms</a>
+                                            </li>
+            
+                                            <!-- <li class="nav-item">
+                                                <a class="nav-link" id="pills-offers-tab" data-toggle="pill" href="#pills-offers" 
+                                                    role="tab" aria-controls="pills-offers" aria-expanded="true">Auction</a>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                    <center>
+                                        <div class="col-lg-5">
+                                            <a class="btn btn-block btn-dark js-modal" href="#" role="button" data-toggle="modal"
+                                                data-target="#satModal">Schedule a Tour</a>
+                                        </div>
+                                    </center>
+                                    <br>
+                                    <center>
+                                        <div class="col-lg-10">
+                                            <a class="btn btn-block btn-primary js-modal" href="#" role="button" data-toggle="modal"
+                                                data-target="#demoModal">Apply</a>
+                                        </div>
+                                    </center>
+            
+            <!---------------------------------------------------------- FORM for Scheduling tour : Tenants-------------------------------------------------------------->
+                                    <form name="tourbookingform" action="/tenant/tourbooking/"  method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="modal fade" id="satModal" tabindex="-1" role="dialog" aria-labelledby="satModal"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Schedule a Tour</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-hidden="true"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                            <input type="hidden" value="{{ pd.propid }}" name="pid" class="form-control form-rounded">
+                                                        Tour Date:
+                                                            <input type="date" id="tourdate" name="tourdt" required>
+                                                        Time Range:<br>
+                                                        From:
+                                                            <input type="time" id="sttime" name="starttime" step="2" required>
+                                                            <script>
+                                                                    function addseconds() {
+                                                                      var stime = document.getElementById("sttime").value;
+                                                                      stime = stime + ":00";
+                                                                      console.log("This is console log start time :",stime)
+                                                                      document.getElementById("sttime").value = stime;
+                                                                      
+                                                                      var etime = document.getElementById("edtime").value;
+                                                                      etime = etime + ":00";
+                                                                      console.log("This is console log end time :",etime)
+                                                                      document.getElementById("edtime").value = etime;
+                                                                    }
+                                                            </script>
+                                                        To:
+                                                            <input type="time" id="edtime" name="endtime" step="2" required>                                        
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary" onclick="addseconds()">Schedule</button>
+                                                    </div>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div>
+                                    </form>
+            <!-------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            
+            <!-------------------------------------------------Workspace : Property Application for Tenants----------------------------------------------------------------->
+                                    <form name="applicationform" action="/tenant/apply/" method="post" enctype="multipart/form-data">   
+                                        {% csrf_token %}
+                                        <div class="modal fade" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="demoModal" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Bid Details</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                                    </div>
+                                                    <div class="modal-body">                                    
+                                                            <input type="hidden" value="{{ pd.propid }}" name="pid" class="form-control form-rounded">
+                                                            <input type="hidden" value="{{ landlordval }}" name="cat" class="form-control form-rounded">
+                                                        Rent Amount:
+                                                            <input type="number" name="rentamt" class="form-control form-rounded" placeholder="Rent Amount" pattern="^[0-9]*[1-9][0-9]*$" required>
+                                                        Deposit Amount:
+                                                            <input type="number" name="depoamt" class="form-control form-rounded" placeholder="Deposit Amount" pattern="^[0-9]*[1-9][0-9]*$" required>
+                                                        Number of Months:
+                                                            <input type="number" name="months" class="form-control form-rounded" placeholder="No. of Months" pattern="^[0-9]*[1-9][0-9]*$" min="1" max="10" required>
+                                                        Number of Beds:
+                                                            <input type="number" name="beds" class="form-control form-rounded" placeholder="No. of Beds" pattern="^[0-9]*[1-9][0-9]*$" min="1" max="10" required>
+                                                        Tenant Category:
+                                                            <select class="form-control" name="tcat" required>
+                                                                <option selected>Bachelor</option>
+                                                                <option>Couple</option>
+                                                                <option>Family</option>
+                                                            </select>
+                                                        Renting Category:
+                                                            <select class="form-control" name="rcat" required>
+                                                                <option selected>Sharing</option>
+                                                                <option>Private</option>
+                                                            </select>
+                                                        Description:
+                                                            <textarea name="desc" class="form-control" id="exampleFormControlTextarea4" rows="5" required></textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Apply</button>
+                                                    </div>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div>
+                                    </form>
+            <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                                    <br>
+                                    <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <ul class="features">
+                                                                <strong><li class="check"><span class="ion-ios-checkmark"></span>Preferance : {{ pd.proptenantcategory }}</li></strong>
+                                                                <strong><li class="check"><span class="ion-ios-checkmark"></span>Floor Area : {{ pd.propsize }} SQ FT</li></strong>  
+                                                                <strong><li class="check"><span class="ion-ios-checkmark"></span>Minimum Deposit : Rs. {{ pd.propdeposit }} </li></strong>  
+
+                                                            </ul>
+                                                        </div> 
+                                                        <div class="col-md-4">
+                                                            <ul class="features">                                            
+                                                                  <strong><li class="check"><span class="ion-ios-checkmark"></span>Category : {{ pd.propcategory }}</li></strong>
+                                                                  <strong><li class="check"><span class="ion-ios-checkmark"></span>Minimum Stay : {{ pd.propminimumstay }} month(s)</li></strong>
+                                                                  <strong><li class="check"><span class="ion-ios-checkmark"></span>Base Price : Rs. {{ pd.proprent }} </li></strong>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <ul class="features">
+                                                                  <strong><li class="check"><span class="ion-ios-checkmark"></span>Total Rooms : {{ pd.propcapacityrooms }}</li></strong>
+                                                                  <strong><li class="check"><span class="ion-ios-checkmark"></span>Total Beds : {{ pd.propcapacitybeds }}</li></strong>                                    
+                                                            </ul>
+                                                        </div> 
+                                                    </div>
+                                                </div>
+            
+            <!---------------------------------------------------------------WorkSection : Property Extra Details Display ------------------------------------------------->
+            <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
+                    <center>
+                            <strong><p>{{ pd.propextradetails }}</p></strong>
+                    </center>    
+                </div>
+            <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            
+            
+            <!---------------------------------------------------------------WorkSection : Amenity Display ---------------------------------------------------------------->
+                                        <div class="tab-pane fade" id="pills-amenities" role="tabpanel" aria-labelledby="pills-amenities-tab">
+                                            <div class="row">
+                                                {% for z in amenityobjs %}
+                                                    <div class="col-md-4">
+                                                        <ul class="features">
+                                                            <li class="check"><span class="ion-ios-checkmark"></span>{{ z.amenityname }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+            <!-------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            
+            <!--------------------------------------- This is the place to display the Auction Information ----------------------------------------------------------------->
+            
+                                        <!-- {{ auc }} -->
+            <!-------------------------------------------------------------------------------------------------------------------------------------------------------------->
+            
+            
+            
+            <!---------------------------------------This is the place to display the offers made on the property----------------------------------------------------------->
+            
+            <div class="tab-pane fade" id="pills-rooms" role="tabpanel" aria-labelledby="pills-rooms-tab"> 
+                    <div class="room-data">
+                        <table class="table table-striped" style="background-color: white; color: black">
+                            <thead>
+                                <tr style="background-color: rgb(224, 122, 202);">
+                                    <strong>
+                                        <th class="text-center">Room No.</th>
+                                        <th class="text-center">Total Beds</th>
+                                        <th class="text-center">Available Beds</th>
+                                        <!-- <th class="text-center">Attached Bathroom</th> -->
+                                        <th class="text-center">Details</th>  
+                                    </strong>                                      
+                                </tr>
+                            </thead>
+                            {% for y in roomobjs %}
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">{{ y.roomtag }}</td>
+                                        <td class="text-center">{{ y.bedcapacity }}</td>
+                                        <td class="text-center">{{ y.bedavailable }}</td>
+                                        <!-- <td class="text-center">{{ y.ismasterroom }}</td> -->
+                                        <td class="text-center">{{ y.roomdetails}}</td>            
+                                    </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+
+                                        
+
+
+
+            <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    </div>
+   
+</body>
+
+{% endblock %}

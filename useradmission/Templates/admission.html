@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %} 
+
+{% block content %}
+
+<!-- partial:index.partial.html -->
+<p class="tip"></p>
+<br><br><br>
+<div class="cont">
+  <div class="form sign-in" style="background-color: white;">
+      {% if login_message %}
+      <ul class="alert alert-danger">
+          <li> {{ login_message }} </li>
+      </ul>
+      {% endif %}
+    <!-- <h2>Login to explore,</h2> -->
+
+    <form action="/useradmission/auth/" method="POST">      
+      {% csrf_token %}
+      <label>
+        <span>Email</span>
+        <input type="email" name="uemail" required/>
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="upassword" id="clickme" required/>
+      </label>
+      <p class="forgot-pass">Forgot password?</p>
+      <button type="submit" class="submit">Sign In</button>
+    </form>
+  </div>
+
+  <div class="sub-cont">
+    <div class="img">
+      <div class="img__text m--up">
+        <h2 style="color : white">New here?</h2>
+        <p>Sign up and discover great amount of new opportunities!</p>
+      </div>
+      <div class="img__text m--in">
+        <h2 style="color : white">One of us?</h2>
+        <p>If you already has an account, just sign in. We've missed you!</p>
+      </div>
+      <div class="img__btn">
+        <span class="m--up">Sign Up</span>
+        <span class="m--in">Sign In</span>
+      </div>
+    </div>
+    <div class="form sign-up">
+      <h2>Welcome to the Rental Family</h2>
+
+    <form action="/useradmission/sign/" method="post">
+        {% csrf_token %}
+
+      <label>
+        <span>First Name</span>
+        <input type="text" name="fname" required />
+      </label>
+      <label>
+        <span>Last Name</span>
+        <input type="text" name="lname" required />
+      </label>
+      <label>
+        <span>Email</span>
+        <input type="email" name="uemail" required />
+      </label>
+      <!-- <label>
+        <span>Password</span>
+        <input type="password" name="pass1" required />
+      </label> -->
+      <button type="submit" class="submit">Sign Up</button>
+    </form>
+    <!-- <button type="button" class="fb-btn">Join with <span>facebook</span></button> -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'baselandlord.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% block content %}
+
+{% if prochanged %}
+  <script>
+    alert('{{ prochanged }}')
+  </script>
+{% endif %}
+
+<br><br>
+      <div>
+        <form class="form-horizontal" name="profileform" action="/landlord/updateaccount/" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}  
+          
+          <div class="container">
+              <div style="border:black;" >
+                <center><h1 style="color:black;"><strong> User Profile </strong></h1></center>
+              </div>
+              <hr>
+              <div class="row">
+                 <div class="col-md-3">
+                  <div class="text-center">
+                    <img style="border-radius: 50%;" src="{{ p.userprofilephoto.url }}" height="120px" width="150px" alt="No Image Available" class="avatar image-circle" alt="avatar" />                
+                    <div class="form-group">
+                      <input type="file" placeholder="Profile Photo" name="propic" accept=".png, .jpg, .jpeg" class="form-control"> 
+                    </div>
+                  </div>
+                 </div>
+                <div class="col-md-9 personal-info">
+                  <div class="alert alert-info alert-dismissable">
+                    <a class="panel-close close" data-dismiss="alert">×</a> 
+                    <i class="fa fa-user"></i>
+                    Please complete your <strong>Profile</strong>. It will help us serve you better.
+                  </div>
+                  <h3>Personal Information</h3>
+          <div class="form-group">
+            <div class="col-lg-8" data-validate="Enter your fname">
+              <label for="inp1">First name </label>
+              <input class="form-control" id="inp1" name="fname" type="text" value="{{p.userfname}}" placeholder="Enter first name" pattern="^[A-Za-z]+$" required>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+              <div class="col-lg-8" data-validate="Enter your lname">
+                <label class="col-lg-3 control-label">Last name</label> 
+                <input class="form-control" type="text" name="lname" value="{{p.userlname}}" placeholder="Enter Last name"  pattern="^[A-Za-z]+$" required>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <div class="col-lg-8" data-validate="Enter your Phone">
+                <label class="col-lg-3 control-label">Phone:(+91)</label> 
+                <input class="form-control" type="text" name="phonenumb" value="{{p.userphone}}" placeholder="Enter Phone number" pattern="^[1-9]([0-9]{9})$" required>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <div class="col-lg-8" data-validate="Enter your dob">
+                <label class="col-lg-3 control-label">Date of Birth:</label> 
+                <input class="form-control" name="udob" type="date" placeholder="Enter date of birth" value='{{  p.userdob|date:"Y-m-d" }}' required>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <div class="col-lg-8">
+                <div class="ui-select">
+                    <label class="col-lg-3 control-label">Gender:</label> 
+                    <select id="user_gender" name="gender" class="form-control">
+                    <option value="{{ p.usergender }}">{{ p.usergender }}</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    </select>
+                </div>
+              </div>
+          </div>
+
+          <div class="form-group">
+              <div class="col-lg-8">
+                <div class="ui-select">
+                    <label class="col-lg-3 control-label">Category:</label> 
+                    <select id="user_category" name="category" class="form-control">
+                    <option value="{{ p.usercategory }}">{{ p.usercategory }}</option>
+                    <option value="student">Student</option>
+                    <option value="couple">Couple</option>
+                    <option value="family">Family</option>
+                    </select>
+                </div>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+              <div class="col-lg-8" data-validate="Enter your state">
+                  <label class="col-lg-3 control-label">State:</label>
+                  <select id="user_state" name="state1" class="form-control">
+                      <option value="{{ p.address.statename }}">{{ p.address.statename }}</option>
+                      <option value="Gujarat">Gujarat</option>   
+                      <option value="Maharastra">Maharastra</option> 
+                    </select>        
+                <!-- <input class="form-control" name="state1" type="text" value="{{p.address.statename}}"  placeholder="Enter State" pattern="^[A-Za-z]+$" required> -->
+              </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+              <div class="col-lg-8" data-validate="Enter your country">
+                  <label class="col-lg-3 control-label">Country:</label>
+                  <select id="user_country" name="country1" class="form-control">
+                      <option value="{{p.address.countryname}}">{{p.address.countryname}}</option>
+                      <option value="India">India</option>                       
+                    </select>  
+                <!-- <input class="form-control" type="text"  name="country1" value="{{p.address.countryname}}" placeholder="Enter Country"  pattern="^[A-Za-z]+$" required> -->
+              </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+              <div class="col-lg-8" data-validate="Enter your pincode">
+                  <label class="col-lg-3 control-label">Pincode:</label>
+                <input class="form-control" type="text" name="pcode" value="{{p.address.pincode}}" placeholder="Enter Pincode" pattern="^[1-9]([0-9]{5})$" required>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+            <div class="col-md-8">
+              <input class="form-control" name="oldpass" type="password" placeholder="Enter Old Password">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+            <div class="col-md-8">
+              <input class="form-control" name="newpass" type="password" placeholder="Enter New Password">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <!-- -->
+            <div class="col-md-8">
+              <input class="form-control" name="newcpass" type="password" placeholder="Confirm New Password">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <!--  -->
+            <div class="col-md-8">
+              <input type="submit" class="btn btn-primary" value="Save Changes">
+                <span></span>
+            </div>
+          </div> 
+
+        </form>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}

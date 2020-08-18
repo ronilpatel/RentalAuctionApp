@@ -1,0 +1,106 @@
+{% extends 'basetenant.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static 'css/tenantdisplaycss/rentpayment.css' %}">
+    
+    
+{% endblock %}
+
+{% block content %}
+<body onload="begin()">
+<br><br><br><br>
+
+                <div class="card" style="background-image: url(https://mdbootstrap.com/img/Photos/Others/gradient1.jpg);">
+                    <div class="text-white text-center d-flex align-items-center py-10 px-3 my-3">
+                        <div class="login-page">
+                            <div class="form">
+                                <form class="login-form" name="receiptform" action="/tenant/generatereceipt/" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                    <h4>{{ pr.prop.propname }}</h4>
+                                    <input type="hidden" value="{{ rm }}" name="duemonth" class="login-form">
+                                    <input type="hidden" value="{{ rc }}" name="receiptcount" class="login-form">
+                                    <input type="hidden" value="{{ rid }}" name="prid" class="login-form">
+                                    <h5 style="font-size: 85%;">Number of beds: <h5 style="color: red;">{{ pr.bedquantity }}</h5></h5>                                          
+                                    <h5 style="font-size: 85%;">Due Month From: <h5 style="color: red;">{{ rm }}</h5></h5>
+                                    <input type="number" name="mcount" id="mon" placeholder="Number of months" min="1" max="{{ pr.staymonthcount }}" value="0" oninput="getpayamt()"/>
+                                    <div id="payamt"><h5>Pay Amount:        0 Tokens</h5></div>
+                                    <input type="submit" class="btn btn-outline-success" value="Pay"/>
+                                    <input type="button" id="tbtn" class="btn btn-outline-primary" value="Show Previous Transactions" onclick="showlog()"/>
+                                    <input type="hidden" id="rentamt" value="{{ pr.rentamount }}" />
+                                    <input type="hidden" id="noofbeds" value="{{ pr.bedquantity }}" />
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div id="translog">
+                <center>
+                <h4>Transaction Log</h4>
+                </center>
+                <center>
+                  <div class="col-lg-11">
+                    <table class="table">
+                            <thead class="thead-dark">
+                              <tr>                          
+                                <th class="text-center" scope="col">Transaction ID</th>
+                                <th class="text-center" scope="col">Month</th>
+                                <th class="text-center" scope="col">Amount</th>
+                                <th class="text-center" scope="col">Date of Payment</th>
+                                <th class="text-center" scope="col">Time of Payment</th>                            
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for r in rr %}
+                                <tr>                              
+                                  <td class="text-center">{{ r.transactionid }}</td> 
+                                  <td class="text-center">{{ r.rentmonth }}</td>
+                                  <td class="text-center">{{ r.amountpaid }}</td>
+                                  <td class="text-center">{{ r.dateofpayment }}</td>
+                                  <td class="text-center">{{ r.timeofpayment }}</td>
+                                </tr>
+                              {% endfor %}                      
+                            </tbody>
+                    </table>
+                  </div>
+                </center>
+            </div>          
+        </body>             
+
+    <script>
+        function getpayamt()
+        {
+            var mon = Number($('#mon').val());
+            var price = Number($('#rentamt').val());
+            var noofbeds = Number($('#noofbeds').val());
+            var months = Number(mon*price*noofbeds);
+            document.getElementById('payamt').innerHTML = "<h5>Pay Amount:        " + months + " Tokens</h5>";
+        
+        }
+    </script>
+
+  <script>
+
+    function showlog(){
+                          var x = document.getElementById("translog");
+                          if (x.style.display === "none") {
+                            $('tbtn').innerHTML = "Hide Previous Transaction";
+                            x.style.display = "block";
+                          } 
+                          else {
+                            $('tbtn').innerHTML = "Show Previous Transaction";
+                            x.style.display = "none";
+                          }
+                      }
+
+    function begin(){
+                      var x = document.getElementById("translog");
+                      x.style.display = "none";
+                    }
+  </script>
+
+    
+{% endblock %}
