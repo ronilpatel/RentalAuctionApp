@@ -92,8 +92,8 @@ class PropertyDetails(models.Model):
 # def before_delete_post(sender,instance,**kwargs):
 #     ud = UserDetails()
 #     ud = instance.landlord
-#     FROM_EMAIL = "rentalauctions@gmail.com"
-#     PASSWORD = "rentalauction143"
+#     FROM_EMAIL = ""
+#     PASSWORD = ""
 #     try:
 #         gmail = smtplib.SMTP('smtp.gmail.com',587)
 #         gmail.ehlo()
