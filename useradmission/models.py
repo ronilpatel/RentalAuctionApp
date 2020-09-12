@@ -187,9 +187,9 @@ def after_save_post(sender,instance,**kwargs):
         # instance.receiptpdf = file[0]
         # instance.save()
 
-        FROM_EMAIL = "rentalauctions@gmail.com"
+        FROM_EMAIL = ""
         TO_EMAIL = str(ud.useremail)
-        PASSWORD = "rentalauction143"
+        PASSWORD = ""
         try:
             gmail = smtplib.SMTP('smtp.gmail.com', 587)
             gmail.ehlo()
